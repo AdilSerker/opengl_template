@@ -9,9 +9,6 @@ INC = -I headers
 CC = g++ -std=gnu++11
 
 all:
-	$(CC) $(FLAGS) $(SRC) $(INC) -c && make build && make clean
-
-compile:
 	$(CC) $(FLAGS) $(SRC) $(INC) -c && make build
 
 scene: source/modules/Scene.cpp

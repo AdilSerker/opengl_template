@@ -6,7 +6,7 @@ extern GLFWwindow *window;
 int WINDOW_WIDTH = 1600;
 int WINDOW_HEIGHT = 900;
 
-Camera::Camera() : position(glm::vec3(0, 2, 2)),
+Camera::Camera() : position(glm::vec3(0, 10, 10)),
                    horizontalAngle(M_PI),
                    verticalAngle(0.0f),
                    initialFoV(45.0f),
@@ -47,9 +47,9 @@ void Camera::computeMatricesFromInputs()
 
     // Right vector
     glm::vec3 right = glm::vec3(
-        sin(horizontalAngle - 3.14f / 2.0f),
+        sin(horizontalAngle - M_PI / 2.0f),
         0,
-        cos(horizontalAngle - 3.14f / 2.0f));
+        cos(horizontalAngle - M_PI / 2.0f));
 
     // Up vector
     glm::vec3 up = glm::cross(right, direction);

@@ -5,9 +5,6 @@
 #include "TriangleMesh.h"
 #include "Camera.h"
 
-#include "Plane.h"
-#include "Torus.h"
-
 class Scene
 {
 private:
