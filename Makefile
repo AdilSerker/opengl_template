@@ -1,4 +1,12 @@
-LIBS = -L/usr/local/lib -lglfw -lGLEW -lGL
+PLATFORM = $(shell uname)
+
+ifeq ($(findstring Linux,$(PLATFORM)),Linux)
+	LIBS = -L/usr/local/lib -lglfw -lGLEW -lGL
+endif
+
+ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
+	LIBS = -L/usr/local/lib -lglfw -lGLEW -framework OpenGL
+endif
  
 FLAGS = -O3 -ffast-math -Wall
 
