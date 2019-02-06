@@ -12,14 +12,9 @@ using namespace glm;
 using namespace std;
 
 #include "Scene.h"
+#include "Camera.h"
 
 Scene *scene = nullptr;
-
-enum
-{
-    WINDOW_WIDTH = 1600,
-    WINDOW_HEIGHT = 900
-};
 
 void initWindow()
 {
@@ -36,15 +31,23 @@ void initWindow()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    int WINDOW_WIDTH = mode->width;
+    int WINDOW_HEIGHT = mode->height;
 
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL template", NULL, NULL);
+    window = glfwCreateWindow(
+        WINDOW_WIDTH,
+        WINDOW_HEIGHT,
+        "OpenGL template",
+        glfwGetPrimaryMonitor(),
+        NULL);
     if (window == NULL)
     {
         fprintf(stderr, "Window initialization error\n");
         glfwTerminate();
         exit(-1);
     }
-    glfwSetWindowPos(window, mode->width / 2 - WINDOW_WIDTH / 2, mode->height / 2 - WINDOW_HEIGHT / 2);
+
+    std::cout << mode->width << "x" << mode->height << "\n";
     glfwMakeContextCurrent(window);
 
     glewExperimental = true;
@@ -55,15 +58,21 @@ void initWindow()
     }
 
     glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
 
     glEnable(GL_DEPTH_TEST);
 
     glDepthFunc(GL_LESS);
 
     glEnable(GL_CULL_FACE);
+
+    #ifndef __APPLE__
+    glDebugMessageCallback(GLUtils::debugCallback, NULL);
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+    glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_MARKER, 0, GL_DEBUG_SEVERITY_NOTIFICATION, -1 , "Start debugging");
+    #endif
 }
 
 void mainLoop()

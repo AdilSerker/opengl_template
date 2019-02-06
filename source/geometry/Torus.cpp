@@ -74,3 +74,24 @@ Torus::Torus(GLfloat outerRadius, GLfloat innerRadius, GLuint nsides, GLuint nri
 
     initBuffers(&el, &p, &n, &tex);
 }
+
+void Torus::render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
+{
+    if (vao == 0)
+        return;
+    
+    shader->setUniform("Material.Kd", 0.9f, 0.5f, 0.3f);
+    shader->setUniform("Material.Ka", 0.9f, 0.5f, 0.3f);
+    shader->setUniform("Material.Ks", 0.8f, 0.8f, 0.8f);
+    shader->setUniform("Material.Shininess", 100.0f);
+
+    glm::mat4 model = glm::mat4(1.0f);
+
+    glm::mat4 mv = view * model;
+    shader->setUniform("ModelViewMatrix", mv);
+    shader->setUniform("MVP", proj * mv);
+
+    glBindVertexArray(vao);
+    glDrawElements(GL_TRIANGLES, nVerts, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

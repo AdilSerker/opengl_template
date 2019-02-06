@@ -34,6 +34,7 @@ class Teapot : public TriangleMesh
 
   public:
     Teapot(int grid, const glm::mat4 &lidTransform);
+    void render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
 };
 
 #endif //TEAPOT_H

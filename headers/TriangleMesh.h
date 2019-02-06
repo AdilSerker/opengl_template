@@ -5,6 +5,10 @@
 
 #include <GL/glew.h>
 
+#include <glm/glm.hpp>
+
+#include "GLSLProgram.h"
+
 class TriangleMesh
 {
   protected:
@@ -24,7 +28,7 @@ class TriangleMesh
 
   public:
     virtual ~TriangleMesh();
-    virtual void render() const;
+    virtual void render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
     GLuint getVao() const { return vao; }
 };
 

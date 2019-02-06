@@ -1,5 +1,7 @@
 #include "TriangleMesh.h"
 
+using glm::mat4;
+
 void TriangleMesh::initBuffers(
     std::vector<GLuint> *indices,
     std::vector<GLfloat> *points,
@@ -79,10 +81,16 @@ void TriangleMesh::initBuffers(
     glBindVertexArray(0);
 }
 
-void TriangleMesh::render() const
+void TriangleMesh::render(GLSLProgram *shader, mat4 view, mat4 proj)
 {
     if (vao == 0)
         return;
+    
+    mat4 model = mat4(1.0f);
+
+    mat4 mv = view * model;
+    shader->setUniform("ModelViewMatrix", mv);
+    shader->setUniform("MVP", proj * mv);
 
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, nVerts, GL_UNSIGNED_INT, 0);
