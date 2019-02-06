@@ -93,6 +93,7 @@ void mainLoop()
 
 int main()
 {
+    
     initWindow();
 
     scene = new Scene();
