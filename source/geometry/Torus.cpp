@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cmath>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 Torus::Torus(GLfloat outerRadius, GLfloat innerRadius, GLuint nsides, GLuint nrings)
 {
@@ -79,19 +80,24 @@ void Torus::render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
 {
     if (vao == 0)
         return;
+
+    glBindVertexArray(vao);
     
-    shader->setUniform("Material.Kd", 0.9f, 0.5f, 0.3f);
-    shader->setUniform("Material.Ka", 0.9f, 0.5f, 0.3f);
-    shader->setUniform("Material.Ks", 0.8f, 0.8f, 0.8f);
-    shader->setUniform("Material.Shininess", 100.0f);
+    shader->setUniform("Kd", 0.9f, 0.2f, 0.1f);
+    shader->setUniform("Ka", 0.6f, 0.6f, 0.6f);
+    shader->setUniform("Ks", 0.8f, 0.8f, 0.8f);
+    shader->setUniform("Shininess", 100.0f);
 
     glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(15.0f,0.0f,5.0f));
+    model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f,0.0f,0.0f));
 
     glm::mat4 mv = view * model;
     shader->setUniform("ModelViewMatrix", mv);
+    shader->setUniform("NormalMatrix",
+                    glm::mat3( glm::vec3(mv[0]), glm::vec3(mv[1]), glm::vec3(mv[2]) ));
     shader->setUniform("MVP", proj * mv);
 
-    glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, nVerts, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

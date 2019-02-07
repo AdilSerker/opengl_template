@@ -24,11 +24,24 @@ Scene::~Scene()
 
 void Scene::initScene()
 {
-    this->camera = new Camera();
-    shapes.push_back(new Plane(100.0f, 100.0f, 1, 1));
-    shapes.push_back(new Teapot(13, glm::mat4(1.0f)));
-
     compileAndLinkShader();
+
+    this->camera = new Camera();
+    shapes.push_back(new Plane(5000.0f, 5000.0f, 1, 1));
+
+    float shiftX = 8.0f;
+    float shiftY = 9.0f;
+
+    for (int i = 1; i < 10; ++i) {
+        glm::vec3 pos = glm::vec3(i*shiftX, 0.0f, i*shiftY);
+            
+        shapes.push_back(new Teapot(55, glm::mat4(1.0f), pos));
+    }
+
+    shader.setUniform("Fog.maxDist", 70.0f );
+    shader.setUniform("Fog.minDist", 1.0f );
+    shader.setUniform("Fog.color", vec3(0.5f,0.5f,0.5f) );
+
 }
 
 void Scene::compileAndLinkShader()
@@ -50,8 +63,8 @@ void Scene::render()
 {
     setMatrices();
 
-    shader.setUniform("LightPosition", view * glm::vec4(0.0f, 100.0f, 100.0f, 0.0f) );
-    shader.setUniform("LightIntensity", vec3(0.8f,0.8f,0.8f) );
+    shader.setUniform("Light.position", view * glm::vec4(0.0f, 1.0f, 1.0f, 0.0f) );
+    shader.setUniform("Light.intensity", vec3(0.8f,0.8f,0.8f) );
 
     for (std::vector<TriangleMesh *>::iterator it = shapes.begin(); it != shapes.end(); ++it)
     {

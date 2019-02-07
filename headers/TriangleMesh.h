@@ -26,7 +26,9 @@ class TriangleMesh
 
     virtual void deleteBuffers();
 
+    glm::vec3 position;
   public:
+  void setPosition(glm::vec3 pos);
     virtual ~TriangleMesh();
     virtual void render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
     GLuint getVao() const { return vao; }

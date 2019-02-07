@@ -9,7 +9,7 @@ using glm::mat4;
 using glm::vec3;
 using glm::vec4;
 
-Teapot::Teapot(int grid, const mat4 &lidTransform)
+Teapot::Teapot(int grid, const mat4 &lidTransform, glm::vec3 pos)
 {
     int verts = 32 * (grid + 1) * (grid + 1);
     int faces = grid * grid * 32;
@@ -21,6 +21,7 @@ Teapot::Teapot(int grid, const mat4 &lidTransform)
     generatePatches(p, n, tc, el, grid);
     moveLid(grid, p, lidTransform);
 
+    position = pos;
     initBuffers(&el, &p, &n, &tc);
 }
 
@@ -256,13 +257,16 @@ void Teapot::render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
 
     glBindVertexArray(vao);
         
-    shader->setUniform("Kd", 0.3f, 0.5f, 0.4f);
+    shader->setUniform("Kd", 0.9f, 0.3f, 0.1f);
     shader->setUniform("Ks", 0.9f, 0.9f, 0.9f);
     shader->setUniform("Ka", 0.1f, 0.1f, 0.1f);
     shader->setUniform("Shininess", 180.0f);
 
     glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, position);
+    model = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));
     glm::mat4 mv = view * model;
 
     shader->setUniform("ModelViewMatrix", mv);

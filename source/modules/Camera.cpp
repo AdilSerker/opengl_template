@@ -95,12 +95,12 @@ void Camera::computeMatricesFromInputs()
         position -= right * deltaTime * speed;
     }
     // Strafe up
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
     {
         position += up * deltaTime * speed;
     }
     // Strafe down
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
     {
         position -= up * deltaTime * speed;
     }

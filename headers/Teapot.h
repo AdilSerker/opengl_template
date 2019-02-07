@@ -32,9 +32,12 @@ class Teapot : public TriangleMesh
     glm::vec3 evaluateNormal(int gridU, int gridV, std::vector<GLfloat> &B, std::vector<GLfloat> &dB, glm::vec3 patch[][4]);
     void moveLid(int grid, std::vector<GLfloat> &p, const glm::mat4 &lidTransform);
 
+    glm::vec3 position;
   public:
-    Teapot(int grid, const glm::mat4 &lidTransform);
+    void setPosition(glm::vec3 pos);
+    Teapot(int grid, const glm::mat4 &lidTransform, glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f));
     void render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
+
 };
 
 #endif //TEAPOT_H

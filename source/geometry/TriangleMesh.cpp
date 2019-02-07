@@ -116,3 +116,8 @@ void TriangleMesh::deleteBuffers()
         vao = 0;
     }
 }
+
+
+void TriangleMesh::setPosition(glm::vec3 pos) {
+    position = pos;
+}
