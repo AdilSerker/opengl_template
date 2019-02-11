@@ -16,8 +16,13 @@ INC = -I headers
 
 CC = g++ -std=gnu++11
 
+DBG = -g1 -rdynamic
+
 all:
 	$(CC) $(FLAGS) $(SRC) $(INC) -c && make build
+
+dbg:
+	$(CC) $(DBG) $(SRC) $(INC) -c && make build_debug
 
 scene: source/modules/Scene.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make build
@@ -28,8 +33,14 @@ app: source/core/App.cpp
 camera: source/modules/Camera.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make build
 
+ter: source/geometry/Terrain.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make build
+
 build:
 	$(CC) ./*.o $(LIBS) $(INC) -o a.out
+build_debug:
+	$(CC) ./*.o $(LIBS) $(INC) -o debug
+
 
 clean:
 	rm -rf ./*.o
