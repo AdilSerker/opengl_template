@@ -43,9 +43,16 @@ void Scene::addShape(TriangleMesh *mesh)
 
 void Scene::compileAndLinkShader()
 {
-    shader.load("./shaders/phong.vert", "./shaders/phong.frag");
-
-    shader.use();
+    try {
+		shader.compileShader("./shaders/phong.vert",GLSLShader::VERTEX);
+		shader.compileShader("./shaders/phong.frag",GLSLShader::FRAGMENT);
+		// shader.compileShader("./shader/shadewire.gs",GLSLShader::GEOMETRY);
+		shader.link();
+    	shader.use();
+    } catch(GLSLProgramException &e ) {
+    	std::cerr << e.what() << std::endl;
+ 		exit( EXIT_FAILURE );
+    }
 }
 
 void Scene::render(glm::mat4 view, glm::mat4 proj)
