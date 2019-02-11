@@ -203,7 +203,7 @@ void Terrain::render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
 
     glBindVertexArray(vao);
 
-    shader->setUniform("Kd", 0.0f, 0.0f, 0.0f);
+    shader->setUniform("Kd", 0.5f, 0.5f, 0.5f);
     shader->setUniform("Ks", 0.9f, 0.9f, 0.9f);
     shader->setUniform("Ka", 0.1f, 0.1f, 0.1f);
     shader->setUniform("Shininess", 280.0f);
@@ -217,6 +217,6 @@ void Terrain::render(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
     shader->setUniform("ProjectionMatrix", proj);
     shader->setUniform("MVP", proj * mv);
 
-    glDrawElements(GL_TRIANGLES, nVerts, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_LINES, nVerts, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }

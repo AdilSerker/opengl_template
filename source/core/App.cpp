@@ -117,11 +117,15 @@ void App::run()
 		double currentTime = glfwGetTime();
 		nbFrames++;
 
-		char text[256];
+		char fps[256];
+		// char cameraPos[256];
 		
 		if (currentTime - lastTime >= 1.0)
 		{
-			sprintf(text,"%i fps", nbFrames );
+			sprintf(fps,"%i fps", nbFrames );
+			// sprintf(cameraPos, "%f.2"); 
+
+
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
@@ -136,7 +140,9 @@ void App::run()
 
 		render();
 
-		printText2D(text, 10, 10, 20);
+		printText2D(fps, 10, 10, 20);
+
+
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

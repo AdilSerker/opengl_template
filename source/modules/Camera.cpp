@@ -1,17 +1,13 @@
 #include "Camera.h"
 #include <iostream>
 
-Camera::Camera() : position(glm::vec3(0, 10, 10)),
+Camera::Camera() : position(glm::vec3(6000, 6000, 6000)),
                    horizontalAngle(M_PI),
                    verticalAngle(0.0f),
                    initialFoV(45.0f),
                    speed(300.0f),
                    mouseSpeed(0.005f)
 {
-    ViewMatrix = glm::lookAt(
-        glm::vec3(0.0f, 10.35f, 0.85f),
-        glm::vec3(0.0f, -0.25f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Camera::computeMatricesFromInputs(GLFWwindow *window)

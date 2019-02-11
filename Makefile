@@ -22,6 +22,9 @@ all:
 scene: source/modules/Scene.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make build
 
+app: source/core/App.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make build
+
 camera: source/modules/Camera.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make build
 
