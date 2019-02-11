@@ -10,6 +10,11 @@ using glm::vec3;
 #include "Plane.h"
 #include "Torus.h"
 #include "Teapot.h"
+#include "Terrain.h"
+
+Scene::Scene() {
+
+}
 
 Scene::~Scene()
 {
@@ -19,30 +24,22 @@ Scene::~Scene()
     }
 
     shapes.clear();
-    delete camera;
 }
 
 void Scene::initScene()
 {
     compileAndLinkShader();
 
-    this->camera = new Camera();
-    shapes.push_back(new Plane(5000.0f, 5000.0f, 1, 1));
-
-    float shiftX = 8.0f;
-    float shiftY = 9.0f;
-
-    for (int i = 1; i < 10; ++i) {
-        glm::vec3 pos = glm::vec3(i*shiftX, 0.0f, i*shiftY);
-            
-        shapes.push_back(new Teapot(55, glm::mat4(1.0f), pos));
-    }
-
-    shader.setUniform("Fog.maxDist", 70.0f );
-    shader.setUniform("Fog.minDist", 1.0f );
-    shader.setUniform("Fog.color", vec3(0.5f,0.5f,0.5f) );
-
+    shader.setUniform("Fog.maxDist", 4800.0f);
+    shader.setUniform("Fog.minDist", 300.0f);
+    shader.setUniform("Fog.color", vec3(0.71f, 0.95f, 1.0f));
 }
+
+void Scene::addShape(TriangleMesh *mesh)
+{
+    shapes.push_back(mesh);
+}
+
 
 void Scene::compileAndLinkShader()
 {
@@ -51,23 +48,37 @@ void Scene::compileAndLinkShader()
     shader.use();
 }
 
-void Scene::setMatrices()
+void Scene::render(glm::mat4 view, glm::mat4 proj)
 {
-    camera->computeMatricesFromInputs();
+    shader.use();
+    shader.setUniform("Light.position", view * glm::vec4(0.0f, 1.0f, 1.0f, 0.0f));
+    shader.setUniform("Light.intensity", vec3(0.8f, 0.8f, 0.8f));
 
-    view = camera->getViewMatrix();
-    projection = camera->getProjectionMatrix();
-}
+    GLuint meshVertIndex = glGetSubroutineIndex(
+        shader.getHandle(),
+        GL_VERTEX_SHADER,
+        "mesh");
+    GLuint meshFragIndex = glGetSubroutineIndex(
+        shader.getHandle(),
+        GL_FRAGMENT_SHADER,
+        "mesh");
 
-void Scene::render()
-{
-    setMatrices();
-
-    shader.setUniform("Light.position", view * glm::vec4(0.0f, 1.0f, 1.0f, 0.0f) );
-    shader.setUniform("Light.intensity", vec3(0.8f,0.8f,0.8f) );
+    GLuint charVertIndex = glGetSubroutineIndex(
+        shader.getHandle(),
+        GL_VERTEX_SHADER,
+        "character");
+    GLuint charFragIndex = glGetSubroutineIndex(
+        shader.getHandle(),
+        GL_FRAGMENT_SHADER,
+        "character");
 
     for (std::vector<TriangleMesh *>::iterator it = shapes.begin(); it != shapes.end(); ++it)
     {
-        (*it)->render(&shader, view, projection);
+        glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &meshVertIndex);
+        glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &meshFragIndex);
+        (*it)->render(&shader, view, proj);
     }
+
+    glUniformSubroutinesuiv(GL_VERTEX_SHADER, 1, &charVertIndex);
+    glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, &charFragIndex);
 }

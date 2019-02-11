@@ -10,22 +10,17 @@ class Scene
 private:
   GLSLProgram shader;
 
-  glm::mat4 model, view, projection;
-
   std::vector<TriangleMesh *> shapes;
 
-  Camera *camera;
-
-  void setMatrices();
   void compileAndLinkShader();
 
 public:
-  Scene() {}
+  Scene();
   ~Scene();
 
   void initScene();
-  void update();
-  void render();
+  void addShape(TriangleMesh *mesh);
+  void render(glm::mat4 view, glm::mat4 proj);
 };
 
 #endif //SCENE_H

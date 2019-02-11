@@ -1,13 +1,11 @@
 #include "Camera.h"
 #include <iostream>
-#include <GLFW/glfw3.h>
-extern GLFWwindow *window;
 
 Camera::Camera() : position(glm::vec3(0, 10, 10)),
                    horizontalAngle(M_PI),
                    verticalAngle(0.0f),
                    initialFoV(45.0f),
-                   speed(3.0f),
+                   speed(300.0f),
                    mouseSpeed(0.005f)
 {
     ViewMatrix = glm::lookAt(
@@ -16,11 +14,11 @@ Camera::Camera() : position(glm::vec3(0, 10, 10)),
         glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-void Camera::computeMatricesFromInputs()
+void Camera::computeMatricesFromInputs(GLFWwindow *window)
 {
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    int WINDOW_WIDTH = mode->width;
-    int WINDOW_HEIGHT = mode->height;
+    int WINDOW_WIDTH = mode->width / 1.5;
+    int WINDOW_HEIGHT = mode->height / 1.5;
 
     // glfwGetTime is called only once, the first time this function is called
     static double lastTime = glfwGetTime();
@@ -29,35 +27,13 @@ void Camera::computeMatricesFromInputs()
     double currentTime = glfwGetTime();
     float deltaTime = float(currentTime - lastTime);
 
-    // // Get mouse position
-    // double xpos, ypos;
-    // glfwGetCursorPos(window, &xpos, &ypos);
+    // Get mouse position
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
 
-    // // Compute new orientation
-    // horizontalAngle += mouseSpeed * float(WINDOW_WIDTH / 2 - xpos);
-    // verticalAngle += mouseSpeed * float(WINDOW_HEIGHT / 2 - ypos);
-
-    // glfwSetCursorPos(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-    {
-        verticalAngle += deltaTime * speed * 0.5;
-    }
-    // Move backward
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-    {
-        verticalAngle -= deltaTime * speed * 0.5;
-    }
-    // Strafe right
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-    {
-        horizontalAngle += deltaTime * speed * 0.5;
-    }
-    // Strafe left
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-    {
-        horizontalAngle -= deltaTime * speed * 0.5;
-    }
+    // Compute new orientation
+    horizontalAngle += mouseSpeed * float(WINDOW_WIDTH / 2 - xpos);
+    verticalAngle += mouseSpeed * float(WINDOW_HEIGHT / 2 - ypos);
 
     // Direction : Spherical coordinates to Cartesian coordinates conversion
     glm::vec3 direction(
@@ -108,8 +84,10 @@ void Camera::computeMatricesFromInputs()
     float FoV = initialFoV; // - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 
     // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-    ProjectionMatrix = glm::perspective(glm::radians(FoV), WINDOW_WIDTH * 1.0f / WINDOW_HEIGHT, 0.1f, 100.0f);
+    ProjectionMatrix = glm::perspective(glm::radians(FoV), WINDOW_WIDTH * 1.0f / WINDOW_HEIGHT, 0.1f, 50000.0f);
     // Camera matrix
+
+    direct = glm::normalize(position + direction);
     ViewMatrix = glm::lookAt(
         position,             // Camera is here
         position + direction, // and looks here : at the same position, plus "direction"
