@@ -4,19 +4,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Scene.h"
-#include "Camera.h"
-#include "Terrain.h"
+#include "GLSLProgram.h"
 
-#include "TriangleMesh.h"
+#include "Poly.h"
 
 class App
 {
 	GLFWwindow *window;
+	GLuint vao, vbo, ibo;
+	GLSLProgram shader;
 
-	Camera *camera;
+	Poly *one;
+	Poly *two;
 
-	Scene *scene;
 	void initWindow();
 	void update();
 	void render();

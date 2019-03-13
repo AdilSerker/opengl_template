@@ -5,46 +5,32 @@ using namespace std;
 
 #include "text2D.hpp"
 
+#include "Poly.h"
+
 void App::update()
 {
-	const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int WINDOW_WIDTH = mode->width / 1.5;
-	int WINDOW_HEIGHT = mode->height / 1.5;
-
-	camera->computeMatricesFromInputs(window);
-	glfwSetCursorPos(window, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
 }
 
 void App::render()
 {
-	scene->render(camera->getViewMatrix(), camera->getProjectionMatrix());
+	one->draw();
+
 }
 
-App::App()
-{
-	initWindow();
-
-	scene = nullptr;
-
-	camera = nullptr;
+App::App() {
+	one = nullptr;
+	two = nullptr;
 }
 
-App::~App()
-{
-	delete scene;
-	delete camera;
-}
+App::~App() {}
 
 void App::init()
 {
-	this->scene = new Scene();
-	scene->initScene();
-
-	Terrain *ter = new Terrain(10000.0f, 512, 1800);
-	scene->addShape(ter);
-	this->camera = new Camera();
-
+	initWindow();
 	initText2D("./fonts/Holstein.DDS");
+
+	this->one = new Poly();
+	this->two = new Poly();
 }
 
 void App::initWindow()
@@ -69,7 +55,7 @@ void App::initWindow()
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT,
 		"OpenGL template",
-		NULL, 
+		NULL,
 		// glfwGetPrimaryMonitor(),
 		NULL);
 	if (window == NULL)
@@ -97,7 +83,8 @@ void App::initWindow()
 
 	glDepthFunc(GL_LESS);
 
-	glEnable(GL_CULL_FACE);
+	// glEnable(GL_CULL_FACE);
+	glDisable(GL_CULL_FACE);
 }
 
 double currentTimeInMs()
@@ -107,7 +94,7 @@ double currentTimeInMs()
 
 void App::run()
 {
-	
+
 	double MS_PER_TICK = 1000 / 60;
 	double PROCESSED_TIME = currentTimeInMs();
 	double lastTime = glfwGetTime();
@@ -116,21 +103,15 @@ void App::run()
 	{
 		double currentTime = glfwGetTime();
 		nbFrames++;
-
 		char fps[256];
-		// char cameraPos[256];
-		
+
 		if (currentTime - lastTime >= 1.0)
 		{
-			sprintf(fps,"%i fps", nbFrames );
-			// sprintf(cameraPos, "%f.2"); 
-
-
+			sprintf(fps, "%i fps", nbFrames);
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 		while ((PROCESSED_TIME + MS_PER_TICK) < currentTimeInMs())
 		{
@@ -142,12 +123,14 @@ void App::run()
 
 		printText2D(fps, 10, 10, 20);
 
-
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	
+
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+
 	cleanupText2D();
 	glfwTerminate();
 }

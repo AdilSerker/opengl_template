@@ -1,5 +1,7 @@
 PLATFORM = $(shell uname)
 
+TARGET = a.out
+
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 	LIBS = -L/usr/local/lib -lglfw -lGLEW -lGL
 endif
@@ -8,39 +10,43 @@ ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
 	LIBS = -L/usr/local/lib -lglfw -lGLEW -framework OpenGL
 endif
  
-FLAGS = -O3 -ffast-math -Wall
+FLAGS = -O3 -Wall
 
-SRC = source/*.cpp source/**/*.cpp
+SRC = src/*.cpp src/**/*.cpp
 
-INC = -I headers
+OBJ = obj/
+
+INC = -I include
 
 CC = g++ -std=gnu++11
 
 DBG = -g1 -rdynamic
 
-all:
-	$(CC) $(FLAGS) $(SRC) $(INC) -c && make build
+SOURCE=$(wildcard src/*.cpp src/**/*cpp)
+OBJS=$(patsubst %.cpp,$(OBJ)%.o,$(SOURCE))
 
-dbg:
-	$(CC) $(DBG) $(SRC) $(INC) -c && make build_debug
+all: compare move link
 
-scene: source/modules/Scene.cpp
-	$(CC) $(FLAGS) $(INC) $< -c && make build
+compare:
+	$(CC) $(FLAGS) $(SRC) $(INC) -c
 
-app: source/core/App.cpp
-	$(CC) $(FLAGS) $(INC) $< -c && make build
+scene: src/modules/Scene.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
-camera: source/modules/Camera.cpp
-	$(CC) $(FLAGS) $(INC) $< -c && make build
+app: src/core/App.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
-ter: source/geometry/Terrain.cpp
-	$(CC) $(FLAGS) $(INC) $< -c && make build
+camera: src/modules/Camera.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
-build:
-	$(CC) ./*.o $(LIBS) $(INC) -o a.out
-build_debug:
-	$(CC) ./*.o $(LIBS) $(INC) -o debug
+ter: src/geometry/Terrain.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
+move:
+	mv ./*.o $(OBJ)
+
+link:
+	$(CC) $(OBJ)*.o $(LIBS) $(INC) -o $(TARGET)
 
 clean:
-	rm -rf ./*.o
+	rm -rf $(OBJ)*.o ./*.o 
