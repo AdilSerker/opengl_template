@@ -3,7 +3,7 @@ PLATFORM = $(shell uname)
 TARGET = a.out
 
 ifeq ($(findstring Linux,$(PLATFORM)),Linux)
-	LIBS = -L/usr/local/lib -lglfw -lGLEW -lGL
+	LIBS = -L/usr/local/lib -lglfw -lGLEW -lGL -lSOIL
 endif
 
 ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
@@ -40,6 +40,9 @@ camera: src/modules/Camera.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
 ter: src/geometry/Terrain.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
+
+poly: src/modules/Poly.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
 move:

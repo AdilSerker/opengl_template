@@ -14,10 +14,10 @@ void App::update()
 void App::render()
 {
 	one->draw();
-
 }
 
-App::App() {
+App::App()
+{
 	one = nullptr;
 	two = nullptr;
 }

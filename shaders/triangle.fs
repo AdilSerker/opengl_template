@@ -1,7 +1,19 @@
 #version 330 core
 
+in vec3 vColor;
+in vec2 vTexCoord;
+
 out vec4 color;
 
-void main() {
-    color = vec4(0.4, 0.2, 0.7, 1.0);
+uniform sampler2D ourTexture1;
+uniform sampler2D ourTexture2;
+
+uniform float mixf;
+
+void main(){
+    color=mix(
+        texture(ourTexture1,vec2(vTexCoord.x,1.-vTexCoord.y)),
+        texture(ourTexture2,vTexCoord),
+        mixf
+    );
 }
