@@ -62,7 +62,7 @@ void Poly::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	unsigned char *image = SOIL_load_image("./texture/frac.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	unsigned char *image = SOIL_load_image("./texture/frac.png", &width, &height, 0, SOIL_LOAD_RGB);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);

@@ -7,7 +7,7 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 endif
 
 ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
-	LIBS = -L/usr/local/lib -lglfw -lGLEW -framework OpenGL
+	LIBS = -L/usr/local/lib -lglfw -lGLEW -lSOIL -framework OpenGL -framework CoreFoundation
 endif
  
 FLAGS = -O3 -Wall
