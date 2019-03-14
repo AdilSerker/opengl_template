@@ -17,7 +17,8 @@ class Poly
     GLuint tex1, tex2;
     GLSLProgram shader;
 
-    void init();
+    void initBuffers();
+    void initTexture();
 
   public:
     Poly();
