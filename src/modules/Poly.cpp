@@ -1,5 +1,8 @@
 #include "Poly.h"
 
+glm::mat4 getViewMatrix();
+glm::mat4 getProjectionMatrix();
+
 Poly::Poly()
 {
 	shader.compileShader("./shaders/triangle.vs", GLSLShader::VERTEX);
@@ -54,18 +57,47 @@ void Poly::initTexture()
 void Poly::initBuffers()
 {
 	GLfloat vertices[] = {
-		0.0f, 0.8f, 0.0f, 0.3f, 0.7f, 0.7f, 0.5f, 1.3f,
-		0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.2f, 0.2f,		// Top Right
-		0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.2f, 0.0f,   // Bottom Right
-		-0.5f, -0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom Left
-		-0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f, 0.0f, 0.2f,   // Top Left
-	};
-	GLuint indices[] = {
-		// Note that we start from 0!
-		0, 1, 4, // First Triangle
-		1, 2, 4,
-		2, 3, 4 // Second Triangle
-	};
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+
+		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f};
 
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
@@ -74,24 +106,20 @@ void Poly::initBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// glGenBuffers(1, &ibo);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid *)(6 * sizeof(GLfloat)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)(3 * sizeof(GLfloat)));
 
 	glBindVertexArray(0);
-
 }
 
-void Poly::draw()
+void Poly::draw(glm::mat4 view, glm::mat4 proj)
 {
 	shader.use();
 
@@ -105,17 +133,39 @@ void Poly::draw()
 
 	glBindVertexArray(vao);
 
-	glm::mat4 model = glm::mat4(1.0f);
-
-	GLfloat timeValue = glfwGetTime();
+	GLfloat timeValue = glfwGetTime() / 3;
 	GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
 
-	glm::mat4 translate = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
-	glm::mat4 rotate = glm::rotate(model, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 scale = glm::scale(model, glm::vec3(2.0f));
+	shader.setUniform("V", view);
 
-	shader.setUniform("transform", translate * rotate * scale);
+	shader.setUniform("P", proj);
 	shader.setUniform("mixf", greenValue);
 
-	glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(2.0f, 5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f, 3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f, 2.0f, -2.5f),
+		glm::vec3(1.5f, 0.2f, -1.5f),
+		glm::vec3(-1.3f, 1.0f, -1.5f)};
+
+	for (GLuint i = 0; i < 10; i++)
+	{
+		GLfloat angle = 20.0f * i;
+		if (i % 3)
+			angle = (GLfloat)glfwGetTime() * 3.0f;
+
+		glm::mat4 model = glm::mat4(1.0f);
+
+		model = glm::translate(model, cubePositions[i]);
+		model = glm::rotate(model, angle, glm::vec3(1.0f, 1.0f, -1.0f));
+		model = glm::scale(model, glm::vec3(1.0f));
+		shader.setUniform("M", model);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
 }

@@ -8,11 +8,15 @@
 
 #include "Poly.h"
 
+#include "Camera.h"
+
 class App
 {
 	GLFWwindow *window;
 	GLuint vao, vbo, ibo;
 	GLSLProgram shader;
+
+	Camera camera;
 
 	Poly *one;
 	Poly *two;

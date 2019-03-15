@@ -9,11 +9,12 @@ using namespace std;
 
 void App::update()
 {
+	camera.computeMatricesFromInputs(window);
 }
 
 void App::render()
 {
-	one->draw();
+	one->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
 }
 
 App::App()
@@ -48,15 +49,15 @@ void App::initWindow()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int WINDOW_WIDTH = mode->width / 1.5;
-	int WINDOW_HEIGHT = mode->height / 1.5;
+	int WINDOW_WIDTH = mode->width;
+	int WINDOW_HEIGHT = mode->height;
 
 	window = glfwCreateWindow(
 		WINDOW_WIDTH,
 		WINDOW_HEIGHT,
 		"OpenGL template",
-		NULL,
-		// glfwGetPrimaryMonitor(),
+		// NULL,
+		glfwGetPrimaryMonitor(),
 		NULL);
 	if (window == NULL)
 	{
@@ -73,6 +74,8 @@ void App::initWindow()
 		fprintf(stderr, "GLEW Initialization error\n");
 		exit(-1);
 	}
+
+	glViewport(0, 0, WINDOW_WIDTH*2, WINDOW_HEIGHT*2);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
