@@ -6,15 +6,23 @@ using namespace std;
 #include "text2D.hpp"
 
 #include "Poly.h"
+#include "LightCube.h"
 
 void App::update()
 {
 	camera.computeMatricesFromInputs(window);
+
+	two->position.x = sin(glfwGetTime());
+	two->position.z = cos(glfwGetTime());
 }
 
 void App::render()
 {
-	one->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+	two->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+	shader->use();
+	shader->setUniform("lightPos", two->position);
+	shader->setUniform("viewPos", camera.getPosition());
+	one->draw(this->shader, camera.getViewMatrix(), camera.getProjectionMatrix());
 }
 
 App::App()
@@ -30,8 +38,18 @@ void App::init()
 	initWindow();
 	initText2D("./fonts/Holstein.DDS");
 
+	this->shader = new GLSLProgram();
+
+	shader->compileShader("./shaders/triangle.vs", GLSLShader::VERTEX);
+	shader->compileShader("./shaders/triangle.fs", GLSLShader::FRAGMENT);
+
+	shader->link();
+	shader->use();
+
+
+	this->two = new LightCube();
 	this->one = new Poly();
-	this->two = new Poly();
+
 }
 
 void App::initWindow()
@@ -80,7 +98,7 @@ void App::initWindow()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	glClearColor(0.71f, 0.95f, 1.0f, 0.0f);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 

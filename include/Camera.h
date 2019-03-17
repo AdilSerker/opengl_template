@@ -15,14 +15,16 @@ class Camera
 	void computeMatricesFromInputs(GLFWwindow *window);
 	glm::mat4 getViewMatrix() const { return ViewMatrix; }
 	glm::mat4 getProjectionMatrix() const { return ProjectionMatrix; }
+	glm::vec3 getPosition() const { return pos; }
 
   private:
 	glm::mat4 ViewMatrix;
 	glm::mat4 ProjectionMatrix;
 
-    glm::vec3 pos;
-    glm::vec3 front;
-    glm::vec3 up;
+	float horizontalAngle;
+	float verticalAngle;
+
+	glm::vec3 pos;
 };
 
 #endif //CAMERA_H

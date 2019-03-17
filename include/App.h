@@ -7,19 +7,19 @@
 #include "GLSLProgram.h"
 
 #include "Poly.h"
-
+#include "LightCube.h"
 #include "Camera.h"
 
 class App
 {
 	GLFWwindow *window;
 	GLuint vao, vbo, ibo;
-	GLSLProgram shader;
+	GLSLProgram *shader;
 
 	Camera camera;
 
 	Poly *one;
-	Poly *two;
+	LightCube *two;
 
 	void initWindow();
 	void update();
