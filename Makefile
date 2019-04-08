@@ -42,7 +42,7 @@ camera: src/modules/Camera.cpp
 ter: src/geometry/Terrain.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
-poly: src/modules/Poly.cpp
+cube: src/modules/Cube.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
 move:

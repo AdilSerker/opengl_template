@@ -1,5 +1,5 @@
-#ifndef POLY_H
-#define POLY_H
+#ifndef CUBE_H
+#define CUBE_H
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,7 +10,7 @@
 
 #include "GLSLProgram.h"
 
-class Poly
+class Cube
 {
   private:
     GLuint vao, vbo, ibo;
@@ -20,8 +20,18 @@ class Poly
     void initTexture();
 
   public:
-    Poly();
-    ~Poly();
+    Cube();
+    ~Cube();
+
+    glm::vec3 position;
+    glm::vec3 rotationAxis;
+    float rotationAngle;
+    glm::vec3 scale;
+
+    glm::vec3 color;
+    float ambient;
+    float specular;
+    float shininess;
 
     void draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
 };

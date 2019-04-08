@@ -4,10 +4,12 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <vector>
+
 #include "GLSLProgram.h"
 
-#include "Poly.h"
-#include "LightCube.h"
+#include "Cube.h"
+#include "SpotLight.h"
 #include "Camera.h"
 
 class App
@@ -18,8 +20,9 @@ class App
 
 	Camera camera;
 
-	Poly *one;
-	LightCube *two;
+	SpotLight *light;
+
+	std::vector<Cube*> cubes;
 
 	void initWindow();
 	void update();

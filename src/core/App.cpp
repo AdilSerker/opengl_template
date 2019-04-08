@@ -5,30 +5,40 @@ using namespace std;
 
 #include "text2D.hpp"
 
-#include "Poly.h"
-#include "LightCube.h"
+#include "Cube.h"
 
 void App::update()
 {
 	camera.computeMatricesFromInputs(window);
 
-	two->position.x = sin(glfwGetTime());
-	two->position.z = cos(glfwGetTime());
+	
+	light->position.x = sin(glfwGetTime());
+	light->position.z = cos(glfwGetTime());
+	light->rotationAngle = (GLfloat)glfwGetTime() * 300.0f;
+
+	Cube *one = cubes[0];
+	one->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
 }
 
 void App::render()
 {
-	two->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+	light->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+	
 	shader->use();
-	shader->setUniform("lightPos", two->position);
-	shader->setUniform("viewPos", camera.getPosition());
-	one->draw(this->shader, camera.getViewMatrix(), camera.getProjectionMatrix());
+	shader->setUniform("light.position", light->position);
+	shader->setUniform("light.ambient", light->ambient * light->color);
+	shader->setUniform("light.diffuse", light->color);
+	shader->setUniform("light.specular", light->color);
+
+	auto it = cubes.begin();
+	for (auto stop = cubes.end(); it != stop; ++it) {
+		(*it)->draw(shader, camera.getViewMatrix(), camera.getProjectionMatrix());
+	}
 }
 
 App::App()
 {
-	one = nullptr;
-	two = nullptr;
+
 }
 
 App::~App() {}
@@ -40,16 +50,30 @@ void App::init()
 
 	this->shader = new GLSLProgram();
 
-	shader->compileShader("./shaders/triangle.vs", GLSLShader::VERTEX);
-	shader->compileShader("./shaders/triangle.fs", GLSLShader::FRAGMENT);
+	shader->compileShader("./shaders/general.vs", GLSLShader::VERTEX);
+	shader->compileShader("./shaders/general.fs", GLSLShader::FRAGMENT);
 
 	shader->link();
 	shader->use();
 
+	this->light = new SpotLight();
+	this->light->color = glm::vec3(1.0f, 1.0f, 1.0f);
+	this->light->ambient = 1.0f;
+	this->light->scale = glm::vec3(0.05f);
+	this->light->position = glm::vec3(2.0f, 0.0f, 2.0f);
 
-	this->two = new LightCube();
-	this->one = new Poly();
+	Cube *one = new Cube();
+	Cube *two = new Cube();
 
+	one->scale = glm::vec3(0.8f);
+	one->color = glm::vec3(1.0f, 1.0f, 1.0f);
+
+
+	two->position = glm::vec3(0.0f, -2.8f, 0.0f);
+	two->scale = glm::vec4(4.0f);
+
+	cubes.push_back(one);
+	cubes.push_back(two);
 }
 
 void App::initWindow()
