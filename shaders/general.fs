@@ -32,10 +32,11 @@ vec3 ads() {
     vec3 reflectDir = reflect(-lightDir, norm);
 
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float diff = max(dot(norm, lightDir), 0.0);
 
     return 
         light.ambient * texture(material.diffuse, TexCoords).rgb +
-        light.diffuse * max(dot(norm, lightDir), 0.0) * texture(material.diffuse, TexCoords).rgb +
+        light.diffuse * diff * texture(material.diffuse, TexCoords).rgb +
         light.specular * spec * texture(material.specular, TexCoords).rgb;
 }
 
