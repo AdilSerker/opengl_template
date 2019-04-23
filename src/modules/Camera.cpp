@@ -9,7 +9,7 @@ Camera::Camera()
     verticalAngle = 0.0f;
 }
 
-void Camera::computeMatricesFromInputs(GLFWwindow *window)
+void Camera::update(GLFWwindow *window)
 {
     const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     int WINDOW_WIDTH = mode->width;

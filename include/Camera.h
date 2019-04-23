@@ -12,7 +12,7 @@ class Camera
 {
   public:
 	Camera();
-	void computeMatricesFromInputs(GLFWwindow *window);
+	void update(GLFWwindow *window);
 	glm::mat4 getViewMatrix() const { return ViewMatrix; }
 	glm::mat4 getProjectionMatrix() const { return ProjectionMatrix; }
 	glm::vec3 getPosition() const { return pos; }

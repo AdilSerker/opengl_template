@@ -8,11 +8,7 @@ SpotLight::SpotLight() :
 	rotationAxis(glm::vec3(1.0, 1.0, 1.0)),
 	rotationAngle(0.0f),
 	scale(glm::vec3(1.0f)),
-	color(glm::vec3(1.0, 0.0, 0.0)),
-	ambient(0.1f),
-	diffuse(0.5f),
-	specular(1.0f),
-	shininess(32.0f)
+	color(glm::vec3(1.0f))
 {
 
 	this->shader = new GLSLProgram();
@@ -22,8 +18,19 @@ SpotLight::SpotLight() :
 
 	shader->link();
 	shader->use();
+	
+	setUniforms(this->shader);
 
 	initBuffers();
+}
+
+void SpotLight::setUniforms(GLSLProgram *shader)
+{
+
+	shader->setUniform("light.position", position);
+	shader->setUniform("light.ambient", 0.2f, 0.2f, 0.2f);
+	shader->setUniform("light.diffuse", 0.5f, 0.5f, 0.5f);
+	shader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
 }
 
 SpotLight::~SpotLight() {}
@@ -103,18 +110,18 @@ void SpotLight::draw(glm::mat4 view, glm::mat4 proj)
 	shader->setUniform("light.diffuse", color);
 	shader->setUniform("light.specular", color);
 
-	shader->setUniform("V", view);
+	shader->setUniform("ViewMatrix", view);
 
-	shader->setUniform("P", proj);
+	shader->setUniform("ProjMatrix", proj);
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, position);
 	model = glm::rotate(model, rotationAngle, rotationAxis);
 	model = glm::scale(model, scale);
-	shader->setUniform("M", model);
+	shader->setUniform("ModelMatrix", model);
 
 	glm::mat4 modelView = view * model;
-	shader->setUniform("N", glm::mat3(glm::vec3(modelView[0]), glm::vec3(modelView[1]), glm::vec3(modelView[2])));
+	shader->setUniform("NormalMatrix", glm::mat3(glm::vec3(modelView[0]), glm::vec3(modelView[1]), glm::vec3(modelView[2])));
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }

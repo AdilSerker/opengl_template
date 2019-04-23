@@ -32,12 +32,12 @@ class SpotLight
 
     glm::vec3 color;
 
-    float ambient;
-    float specular;
-    float diffuse;
-    float shininess;
+    glm::vec3 ambient;
+    glm::vec3 specular;
+    glm::vec3 diffuse;
 
     void draw(glm::mat4 view, glm::mat4 proj);
+    void setUniforms(GLSLProgram *shader);
 };
 
 #endif

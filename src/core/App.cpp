@@ -9,12 +9,10 @@ using namespace std;
 
 void App::update()
 {
-	camera.computeMatricesFromInputs(window);
+	camera.update(window);
 
-	
 	light->position.x = sin(glfwGetTime());
 	light->position.z = cos(glfwGetTime());
-	light->rotationAngle = (GLfloat)glfwGetTime() * 300.0f;
 
 	Cube *one = cubes[0];
 	one->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
@@ -23,22 +21,19 @@ void App::update()
 void App::render()
 {
 	light->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
-	
+
 	shader->use();
-	shader->setUniform("light.position", light->position);
-	shader->setUniform("light.ambient", light->ambient * light->color);
-	shader->setUniform("light.diffuse", light->color);
-	shader->setUniform("light.specular", light->color);
+	light->setUniforms(this->shader);
 
 	auto it = cubes.begin();
-	for (auto stop = cubes.end(); it != stop; ++it) {
+	for (auto stop = cubes.end(); it != stop; ++it)
+	{
 		(*it)->draw(shader, camera.getViewMatrix(), camera.getProjectionMatrix());
 	}
 }
 
 App::App()
 {
-
 }
 
 App::~App() {}
@@ -57,8 +52,6 @@ void App::init()
 	shader->use();
 
 	this->light = new SpotLight();
-	this->light->color = glm::vec3(1.0f, 1.0f, 1.0f);
-	this->light->ambient = 1.0f;
 	this->light->scale = glm::vec3(0.05f);
 	this->light->position = glm::vec3(2.0f, 0.0f, 2.0f);
 
@@ -66,8 +59,6 @@ void App::init()
 	Cube *two = new Cube();
 
 	one->scale = glm::vec3(0.8f);
-	one->color = glm::vec3(1.0f, 1.0f, 1.0f);
-
 
 	two->position = glm::vec3(0.0f, -2.8f, 0.0f);
 	two->scale = glm::vec4(4.0f);
@@ -117,7 +108,7 @@ void App::initWindow()
 		exit(-1);
 	}
 
-	glViewport(0, 0, WINDOW_WIDTH*2, WINDOW_HEIGHT*2);
+	glViewport(0, 0, WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

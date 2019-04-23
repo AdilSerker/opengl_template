@@ -2,23 +2,24 @@
 
 in vec3 Normal;
 in vec3 Position;
+in vec2 TexCoords;
 in vec3 LightPosition;
 
 out vec4 color;
 
 struct Material {
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    sampler2D diffuse;
+    sampler2D specular;
     float shininess;
 };
 uniform Material material;
 
 struct Light {
+    vec3 position;
+
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
-    vec3 position;
 };
 uniform Light light;
 
@@ -30,10 +31,12 @@ vec3 ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
     return 
-        light.ambient * material.ambient +
-        light.diffuse * material.diffuse * max(dot(norm, lightDir), 0.0) +
-        light.specular * material.specular * pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+        light.ambient * texture(material.diffuse, TexCoords).rgb +
+        light.diffuse * max(dot(norm, lightDir), 0.0) * texture(material.diffuse, TexCoords).rgb +
+        light.specular * spec * texture(material.specular, TexCoords).rgb;
 }
 
 void main(){

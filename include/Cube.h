@@ -14,7 +14,7 @@ class Cube
 {
   private:
     GLuint vao, vbo, ibo;
-    GLuint tex1, tex2;
+    GLuint diffuseMap, specularMap;
 
     void initBuffers();
     void initTexture();
@@ -28,8 +28,6 @@ class Cube
     float rotationAngle;
     glm::vec3 scale;
 
-    glm::vec3 color;
-    float ambient;
     float specular;
     float shininess;
 

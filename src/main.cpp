@@ -5,7 +5,6 @@ App *app = nullptr;
 int main()
 {
 	app = new App();
-
 	app->init();
 	app->run();
 
