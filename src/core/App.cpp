@@ -11,8 +11,8 @@ void App::update()
 {
 	camera.update(window);
 
-	light->position.x = sin(glfwGetTime());
-	light->position.z = cos(glfwGetTime());
+	light->position.x = 3 * sin(glfwGetTime());
+	light->position.z = 3 * cos(glfwGetTime());
 
 	Cube *one = cubes[0];
 	one->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
@@ -53,7 +53,7 @@ void App::init()
 
 	this->light = new SpotLight();
 	this->light->scale = glm::vec3(0.05f);
-	this->light->position = glm::vec3(2.0f, 0.0f, 2.0f);
+	this->light->position = glm::vec3(10.0f, 0.0f, 10.0f);
 
 	Cube *one = new Cube();
 	Cube *two = new Cube();

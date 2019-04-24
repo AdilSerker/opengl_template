@@ -19,6 +19,8 @@ class Cube
     void initBuffers();
     void initTexture();
 
+    void genTex(GLuint &map, const char *filename);
+
   public:
     Cube();
     ~Cube();
