@@ -18,19 +18,29 @@ struct Light {
 };
 uniform Light light;
 
+struct DirLight {
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform DirLight dirLight;
+
 out vec3 Normal;
 out vec3 Position;
 out vec2 TexCoords;
 out vec3 LightPosition;
+out vec3 LightDirection;
 
 
 void main(){
 
-    Position = vec3(ViewMatrix * ModelMatrix*vec4(VertexPosition,1.));
+    Position = vec3(ViewMatrix * ModelMatrix * vec4(VertexPosition,1.));
     LightPosition = vec3(ViewMatrix * vec4(light.position,1.));
+    LightDirection = vec3(ViewMatrix * vec4(dirLight.direction,1.));
     TexCoords = VertexTexCoords;
 
     Normal = NormalMatrix * VertexNormal;
 
-    gl_Position=ProjMatrix*ViewMatrix*ModelMatrix*vec4(VertexPosition,1.);
+    gl_Position = ProjMatrix * ViewMatrix * ModelMatrix * vec4(VertexPosition,1.);
 }

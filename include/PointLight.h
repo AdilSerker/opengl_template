@@ -1,5 +1,5 @@
-#ifndef SPOT_LIGHT_H
-#define SPOT_LIGHT_H
+#ifndef POINT_LIGHT_H
+#define POINT_LIGHT_H
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,20 +10,18 @@
 
 #include "GLSLProgram.h"
 
-class SpotLight
+class PointLight
 {
   private:
-    GLuint vao, vbo, ibo;
-    GLuint tex1, tex2;
+    GLuint vao, vbo;
 
     void initBuffers();
-    void initTexture();
 
     GLSLProgram *shader;
 
   public:
-    SpotLight();
-    ~SpotLight();
+    PointLight();
+    ~PointLight();
 
     glm::vec3 position;
     glm::vec3 rotationAxis;
@@ -33,11 +31,12 @@ class SpotLight
     glm::vec3 color;
 
     glm::vec3 ambient;
-    glm::vec3 specular;
     glm::vec3 diffuse;
+    glm::vec3 specular;
 
     void draw(glm::mat4 view, glm::mat4 proj);
     void setUniforms(GLSLProgram *shader);
+    void setUniforms(GLSLProgram *shader, glm::vec3 color);
 };
 
 #endif

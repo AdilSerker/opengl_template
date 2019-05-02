@@ -9,10 +9,10 @@ using namespace std;
 
 void App::update()
 {
-	camera.update(window);
+	camera->update(window);
 
-	light->position.x = 3 * sin(glfwGetTime());
-	light->position.z = 3 * cos(glfwGetTime());
+	light->position.x = 5 * sin(glfwGetTime());
+	light->position.z = 5 * cos(glfwGetTime());
 
 	Cube *one = cubes[0];
 	one->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
@@ -20,15 +20,17 @@ void App::update()
 
 void App::render()
 {
-	light->draw(camera.getViewMatrix(), camera.getProjectionMatrix());
+	light->draw(camera->getViewMatrix(), camera->getProjectionMatrix());
 
 	shader->use();
 	light->setUniforms(this->shader);
+	dirLight->setUniforms(this->shader);
+	camera->setUniforms(this->shader);
 
 	auto it = cubes.begin();
 	for (auto stop = cubes.end(); it != stop; ++it)
 	{
-		(*it)->draw(shader, camera.getViewMatrix(), camera.getProjectionMatrix());
+		(*it)->draw(shader, camera->getViewMatrix(), camera->getProjectionMatrix());
 	}
 }
 
@@ -43,6 +45,8 @@ void App::init()
 	initWindow();
 	initText2D("./fonts/Holstein.DDS");
 
+	this->camera = new Camera();
+
 	this->shader = new GLSLProgram();
 
 	shader->compileShader("./shaders/general.vs", GLSLShader::VERTEX);
@@ -51,9 +55,11 @@ void App::init()
 	shader->link();
 	shader->use();
 
-	this->light = new SpotLight();
+	this->light = new PointLight();
 	this->light->scale = glm::vec3(0.05f);
-	this->light->position = glm::vec3(10.0f, 0.0f, 10.0f);
+	this->light->position = glm::vec3(10.0f, -0.5f, 10.0f);
+
+	this->dirLight = new DirectionLight();
 
 	Cube *one = new Cube();
 	Cube *two = new Cube();
@@ -113,7 +119,7 @@ void App::initWindow()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 

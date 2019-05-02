@@ -13,7 +13,7 @@
 class Cube
 {
   private:
-    GLuint vao, vbo, ibo;
+    GLuint vao, vbo;
     GLuint diffuseMap, specularMap;
 
     void initBuffers();

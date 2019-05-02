@@ -1,14 +1,14 @@
-#include "SpotLight.h"
+#include "PointLight.h"
 
-glm::mat4 getViewMatrix();
-glm::mat4 getProjectionMatrix();
-
-SpotLight::SpotLight() :
+PointLight::PointLight() :
 	position(glm::vec3(0.0, 0.0, 0.0)),
 	rotationAxis(glm::vec3(1.0, 1.0, 1.0)),
 	rotationAngle(0.0f),
 	scale(glm::vec3(1.0f)),
-	color(glm::vec3(1.0f))
+	color(glm::vec3(1.0f)),
+	ambient(glm::vec3(0.2f, 0.2f, 0.2f)),
+	diffuse(glm::vec3(0.5f, 0.5f, 0.5f)),
+	specular(glm::vec3(1.0f, 1.0f, 1.0f))
 {
 
 	this->shader = new GLSLProgram();
@@ -24,18 +24,26 @@ SpotLight::SpotLight() :
 	initBuffers();
 }
 
-void SpotLight::setUniforms(GLSLProgram *shader)
+void PointLight::setUniforms(GLSLProgram *shader)
 {
 
 	shader->setUniform("light.position", position);
-	shader->setUniform("light.ambient", 0.2f, 0.2f, 0.2f);
-	shader->setUniform("light.diffuse", 0.5f, 0.5f, 0.5f);
-	shader->setUniform("light.specular", 1.0f, 1.0f, 1.0f);
+	shader->setUniform("light.ambient", ambient);
+	shader->setUniform("light.diffuse", diffuse);
+	shader->setUniform("light.specular", specular);
 }
 
-SpotLight::~SpotLight() {}
+void PointLight::setUniforms(GLSLProgram *shader, glm::vec3 color)
+{
+	shader->setUniform("light.position", position);
+	shader->setUniform("light.ambient", color);
+	shader->setUniform("light.diffuse", color);
+	shader->setUniform("light.specular", color);
+}
 
-void SpotLight::initBuffers()
+PointLight::~PointLight() {}
+
+void PointLight::initBuffers()
 {
 	float vertices[] = {
 		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
@@ -96,22 +104,15 @@ void SpotLight::initBuffers()
 	glBindVertexArray(0);
 }
 
-void SpotLight::draw(glm::mat4 view, glm::mat4 proj)
+void PointLight::draw(glm::mat4 view, glm::mat4 proj)
 {
 	shader->use();
 
 	glBindVertexArray(vao);
 
-	GLfloat timeValue = glfwGetTime() / 3;
-	GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-
-	shader->setUniform("light.position", position);
-	shader->setUniform("light.ambient", ambient * color);
-	shader->setUniform("light.diffuse", color);
-	shader->setUniform("light.specular", color);
+	this->setUniforms(shader, color);
 
 	shader->setUniform("ViewMatrix", view);
-
 	shader->setUniform("ProjMatrix", proj);
 
 	glm::mat4 model = glm::mat4(1.0f);

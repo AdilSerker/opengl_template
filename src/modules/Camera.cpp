@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include <iostream>
 
 Camera::Camera()
 {
@@ -15,14 +14,10 @@ void Camera::update(GLFWwindow *window)
     int WINDOW_WIDTH = mode->width;
     int WINDOW_HEIGHT = mode->height;
 
-    static double lastTime = glfwGetTime();
-    double currentTime = glfwGetTime();
-    float deltaTime = float(currentTime - lastTime);
-
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);
     glfwSetCursorPos(window, WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
-    GLfloat cameraSpeed = 0.01f;
+    GLfloat cameraSpeed = 0.1f;
     GLfloat mouseSpeed = 0.005f;
 
     horizontalAngle += mouseSpeed * float(WINDOW_WIDTH/2 - xpos );
@@ -83,5 +78,10 @@ void Camera::update(GLFWwindow *window)
         up
     );
 
-    lastTime = currentTime;
+    // lastTime = currentTime;
+}
+
+void Camera::setUniforms(GLSLProgram *shader)
+{
+	shader->setUniform("viewPos", pos);
 }

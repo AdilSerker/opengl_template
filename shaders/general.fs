@@ -4,6 +4,7 @@ in vec3 Normal;
 in vec3 Position;
 in vec2 TexCoords;
 in vec3 LightPosition;
+in vec3 LightDirection;
 
 out vec4 color;
 
@@ -16,16 +17,21 @@ uniform Material material;
 
 struct Light {
     vec3 position;
-
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
 uniform Light light;
 
-uniform vec3 LightIntensity;
+struct DirLight {
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform DirLight dirLight;
 
-vec3 ads() {
+vec3 point_ads() {
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(LightPosition - Position);
     vec3 viewDir = normalize(-Position);
@@ -40,6 +46,25 @@ vec3 ads() {
         light.specular * spec * texture(material.specular, TexCoords).rgb;
 }
 
+vec3 dirLight_ads() {
+    vec3 norm = normalize(Normal);
+    vec3 lightDir = normalize(-LightDirection);
+    vec3 viewDir = normalize(-Position);
+    vec3 reflectDir = reflect(-lightDir, norm);
+
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float diff = max(dot(norm, lightDir), 0.0);
+
+    return 
+        dirLight.ambient * texture(material.diffuse, TexCoords).rgb +
+        dirLight.diffuse * diff * texture(material.diffuse, TexCoords).rgb +
+        dirLight.specular * spec * texture(material.specular, TexCoords).rgb;
+}
+
 void main(){
-    color=vec4(ads(), 1.0);
+    vec3 res;
+
+    res = point_ads() + dirLight_ads();
+
+    color=vec4(res, 1.0);
 }

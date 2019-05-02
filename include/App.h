@@ -9,8 +9,10 @@
 #include "GLSLProgram.h"
 
 #include "Cube.h"
-#include "SpotLight.h"
 #include "Camera.h"
+
+#include "PointLight.h"
+#include "DirectionLight.h"
 
 class App
 {
@@ -18,9 +20,10 @@ class App
 	GLuint vao, vbo, ibo;
 	GLSLProgram *shader;
 
-	Camera camera;
+	Camera *camera;
 
-	SpotLight *light;
+	PointLight *light;
+	DirectionLight *dirLight;
 
 	std::vector<Cube*> cubes;
 

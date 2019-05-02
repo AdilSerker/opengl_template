@@ -116,8 +116,8 @@ void Cube::draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
 
 	glBindVertexArray(vao);
 
-	GLfloat timeValue = glfwGetTime() / 3;
-	GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
+	// GLfloat timeValue = glfwGetTime() / 3;
+	// GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
 
 	shader->setUniform("material.diffuse", 0);
 	shader->setUniform("material.specular", 1);
