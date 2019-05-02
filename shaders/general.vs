@@ -37,7 +37,7 @@ void main(){
 
     Position = vec3(ViewMatrix * ModelMatrix * vec4(VertexPosition,1.));
     LightPosition = vec3(ViewMatrix * vec4(light.position,1.));
-    LightDirection = vec3(ViewMatrix * vec4(dirLight.direction,1.));
+    LightDirection = vec3(ViewMatrix * vec4(dirLight.direction,0.));
     TexCoords = VertexTexCoords;
 
     Normal = NormalMatrix * VertexNormal;

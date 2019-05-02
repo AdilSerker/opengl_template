@@ -6,7 +6,7 @@ PointLight::PointLight() :
 	rotationAngle(0.0f),
 	scale(glm::vec3(1.0f)),
 	color(glm::vec3(1.0f)),
-	ambient(glm::vec3(0.2f, 0.2f, 0.2f)),
+	ambient(glm::vec3(0.1f, 0.1f, 0.1f)),
 	diffuse(glm::vec3(0.5f, 0.5f, 0.5f)),
 	specular(glm::vec3(1.0f, 1.0f, 1.0f))
 {

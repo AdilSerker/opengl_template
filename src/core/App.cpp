@@ -23,9 +23,9 @@ void App::render()
 	light->draw(camera->getViewMatrix(), camera->getProjectionMatrix());
 
 	shader->use();
+	camera->setUniforms(this->shader);
 	light->setUniforms(this->shader);
 	dirLight->setUniforms(this->shader);
-	camera->setUniforms(this->shader);
 
 	auto it = cubes.begin();
 	for (auto stop = cubes.end(); it != stop; ++it)
