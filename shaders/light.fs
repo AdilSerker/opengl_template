@@ -12,10 +12,10 @@ struct Light {
     vec3 specular;
     vec3 position;
 };
-uniform Light light;
+uniform Light pointLight;
 
 uniform vec3 LightIntensity;
 
 void main(){
-    color=vec4(light.diffuse, 1.0);
+    color=vec4(pointLight.diffuse, 1.0);
 }

@@ -15,13 +15,13 @@ struct Material {
 };
 uniform Material material;
 
-struct Light {
+struct PointLight {
     vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
-uniform Light light;
+uniform PointLight pointLight;
 
 struct DirLight {
     vec3 direction;
@@ -41,9 +41,9 @@ vec3 point_ads() {
     float diff = max(dot(norm, lightDir), 0.0);
 
     return 
-        light.ambient * texture(material.diffuse, TexCoords).rgb +
-        light.diffuse * diff * texture(material.diffuse, TexCoords).rgb +
-        light.specular * spec * texture(material.specular, TexCoords).rgb;
+        pointLight.ambient * texture(material.diffuse, TexCoords).rgb +
+        pointLight.diffuse * diff * texture(material.diffuse, TexCoords).rgb +
+        pointLight.specular * spec * texture(material.specular, TexCoords).rgb;
 }
 
 vec3 dirLight_ads() {

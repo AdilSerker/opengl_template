@@ -26,19 +26,18 @@ PointLight::PointLight() :
 
 void PointLight::setUniforms(GLSLProgram *shader)
 {
-
-	shader->setUniform("light.position", position);
-	shader->setUniform("light.ambient", ambient);
-	shader->setUniform("light.diffuse", diffuse);
-	shader->setUniform("light.specular", specular);
+	shader->setUniform("pointLight.position", position);
+	shader->setUniform("pointLight.ambient", ambient);
+	shader->setUniform("pointLight.diffuse", diffuse);
+	shader->setUniform("pointLight.specular", specular);
 }
 
 void PointLight::setUniforms(GLSLProgram *shader, glm::vec3 color)
 {
-	shader->setUniform("light.position", position);
-	shader->setUniform("light.ambient", color);
-	shader->setUniform("light.diffuse", color);
-	shader->setUniform("light.specular", color);
+	shader->setUniform("pointLight.position", position);
+	shader->setUniform("pointLight.ambient", color);
+	shader->setUniform("pointLight.diffuse", color);
+	shader->setUniform("pointLight.specular", color);
 }
 
 PointLight::~PointLight() {}

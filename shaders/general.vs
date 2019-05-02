@@ -9,14 +9,13 @@ uniform mat3 NormalMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjMatrix;
 
-struct Light {
+struct PointLight {
     vec3 position;
-
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
 };
-uniform Light light;
+uniform PointLight pointLight;
 
 struct DirLight {
     vec3 direction;
@@ -36,7 +35,7 @@ out vec3 LightDirection;
 void main(){
 
     Position = vec3(ViewMatrix * ModelMatrix * vec4(VertexPosition,1.));
-    LightPosition = vec3(ViewMatrix * vec4(light.position,1.));
+    LightPosition = vec3(ViewMatrix * vec4(pointLight.position,1.));
     LightDirection = vec3(ViewMatrix * vec4(dirLight.direction,0.));
     TexCoords = VertexTexCoords;
 
