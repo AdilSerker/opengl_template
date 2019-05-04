@@ -7,7 +7,7 @@ ifeq ($(findstring Linux,$(PLATFORM)),Linux)
 endif
 
 ifeq ($(findstring Darwin,$(PLATFORM)),Darwin)
-	LIBS = -L/usr/local/lib -lglfw -lGLEW -lSOIL -framework OpenGL -framework CoreFoundation
+	LIBS = -L/usr/local/lib -lglfw -lGLEW -lSOIL -lassimp -framework OpenGL -framework CoreFoundation
 endif
  
 FLAGS = -O3 -Wall
@@ -34,6 +34,9 @@ scene: src/modules/Scene.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
 app: src/core/App.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
+
+model: src/modules/Model.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
 camera: src/modules/Camera.cpp
