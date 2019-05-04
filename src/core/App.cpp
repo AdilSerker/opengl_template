@@ -1,11 +1,14 @@
 #include "App.h"
 
+#include <string>
 #include <iostream>
 using namespace std;
 
 #include "text2D.hpp"
 
 #include "Cube.h"
+
+void printg(string info, int value, int y);
 
 void App::update()
 {
@@ -14,8 +17,6 @@ void App::update()
 	light->position.x = 5 * sin(glfwGetTime());
 	light->position.z = 5 * cos(glfwGetTime());
 
-	Cube *one = cubes[0];
-	one->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
 }
 
 void App::render()
@@ -24,14 +25,19 @@ void App::render()
 
 	shader->use();
 	camera->setUniforms(this->shader);
+
 	light->setUniforms(this->shader);
 	dirLight->setUniforms(this->shader);
 
-	auto it = cubes.begin();
-	for (auto stop = cubes.end(); it != stop; ++it)
+	auto it1 = models.begin();
+	for (auto stop = models.end(); it1 != stop; ++it1)
 	{
-		(*it)->draw(shader, camera->getViewMatrix(), camera->getProjectionMatrix());
+		(*it1)->Draw(shader, camera->getViewMatrix(), camera->getProjectionMatrix());
 	}
+
+	printg("cam_pos.x", (int)camera->getPosition().x, 40);
+	printg("cam_pos.y", (int)camera->getPosition().y, 60);
+	printg("cam_pos.z", (int)camera->getPosition().z, 80);
 }
 
 App::App()
@@ -49,28 +55,20 @@ void App::init()
 
 	this->shader = new GLSLProgram();
 
-	shader->compileShader("./shaders/general.vs", GLSLShader::VERTEX);
-	shader->compileShader("./shaders/general.fs", GLSLShader::FRAGMENT);
+	shader->compileShader("./shaders/ml.vs", GLSLShader::VERTEX);
+	shader->compileShader("./shaders/ml.fs", GLSLShader::FRAGMENT);
 
 	shader->link();
 	shader->use();
 
 	this->light = new PointLight();
 	this->light->scale = glm::vec3(0.05f);
-	this->light->position = glm::vec3(10.0f, -0.5f, 10.0f);
+	this->light->position = glm::vec3(10.0f, 10.5f, 10.0f);
 
 	this->dirLight = new DirectionLight();
 
-	Cube *one = new Cube();
-	Cube *two = new Cube();
+	models.push_back(new Model("./models/nanosuit/nanosuit.obj"));
 
-	one->scale = glm::vec3(0.8f);
-
-	two->position = glm::vec3(0.0f, -2.8f, 0.0f);
-	two->scale = glm::vec4(4.0f);
-
-	cubes.push_back(one);
-	cubes.push_back(two);
 }
 
 void App::initWindow()
@@ -119,7 +117,7 @@ void App::initWindow()
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -145,11 +143,11 @@ void App::run()
 	{
 		double currentTime = glfwGetTime();
 		nbFrames++;
-		char fps[256];
+		static int fps = 0;
 
 		if (currentTime - lastTime >= 1.0)
 		{
-			sprintf(fps, "%i fps", nbFrames);
+			fps = nbFrames;
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
@@ -163,7 +161,7 @@ void App::run()
 
 		render();
 
-		printText2D(fps, 10, 10, 20);
+		printg("fps ", fps, 10);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -175,4 +173,11 @@ void App::run()
 
 	cleanupText2D();
 	glfwTerminate();
+}
+
+void printg(string info, int value, int y) {
+	char text[256];
+
+	sprintf(text, (info + " %i").c_str(), value);
+	printText2D(text, 10, y, 12);
 }

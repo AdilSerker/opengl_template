@@ -15,6 +15,10 @@ struct Material {
 };
 uniform Material material;
 
+uniform sampler2D texture_diffuse1;
+uniform sampler2D texture_specular1;
+uniform sampler2D texture_normal1;
+
 struct PointLight {
     vec3 position;
     vec3 ambient;
@@ -40,7 +44,7 @@ vec3 point_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     float distance    = length(LightPosition - Position);
@@ -48,9 +52,9 @@ vec3 point_ads() {
     		    pointLight.quadratic * (distance * distance));
 
     return 
-        pointLight.ambient * texture(material.diffuse, TexCoords).rgb * attenuation +
-        pointLight.diffuse * diff * texture(material.diffuse, TexCoords).rgb * attenuation +
-        pointLight.specular * spec * texture(material.specular, TexCoords).rgb * attenuation;
+        pointLight.ambient * texture(texture_diffuse1, TexCoords).rgb * attenuation +
+        pointLight.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb * attenuation +
+        dirLight.specular * spec * texture(texture_specular1, TexCoords).rgb;
 }
 
 vec3 dirLight_ads() {
@@ -59,13 +63,13 @@ vec3 dirLight_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     return 
-        dirLight.ambient * texture(material.diffuse, TexCoords).rgb +
-        dirLight.diffuse * diff * texture(material.diffuse, TexCoords).rgb +
-        dirLight.specular * spec * texture(material.specular, TexCoords).rgb;
+        dirLight.ambient * texture(texture_diffuse1, TexCoords).rgb +
+        dirLight.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb +
+        dirLight.specular * spec * texture(texture_specular1, TexCoords).rgb;
 }
 
 void main(){

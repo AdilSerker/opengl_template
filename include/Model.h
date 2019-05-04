@@ -11,6 +11,8 @@
 #include "Mesh.h"
 #include "GLSLProgram.h"
 
+#include <SOIL/SOIL.h>
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -34,7 +36,7 @@ public:
         loadModel(path);
     }
 
-    void Draw(GLSLProgram shader);
+    void Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
     
 private:
     void loadModel(string const &path);

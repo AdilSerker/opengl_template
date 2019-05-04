@@ -34,6 +34,10 @@ class PointLight
     glm::vec3 diffuse;
     glm::vec3 specular;
 
+    float constant;
+    float linear;
+    float quadratic;
+
     void draw(glm::mat4 view, glm::mat4 proj);
     void setUniforms(GLSLProgram *shader);
     void setUniforms(GLSLProgram *shader, glm::vec3 color);

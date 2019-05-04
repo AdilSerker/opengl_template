@@ -2,7 +2,7 @@
 
 Camera::Camera()
 {
-    pos   = glm::vec3(0.0f, 2.0f,  3.0f);
+    pos   = glm::vec3(0.0f, 15.0f,  7.0f);
 
     horizontalAngle = 3.14f;
     verticalAngle = 0.0f;

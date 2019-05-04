@@ -8,7 +8,10 @@ PointLight::PointLight() :
 	color(glm::vec3(1.0f)),
 	ambient(glm::vec3(0.1f, 0.1f, 0.1f)),
 	diffuse(glm::vec3(0.5f, 0.5f, 0.5f)),
-	specular(glm::vec3(1.0f, 1.0f, 1.0f))
+	specular(glm::vec3(1.0f, 1.0f, 1.0f)),
+	constant(1.0f),
+	linear(0.09f),
+	quadratic(0.032f)
 {
 
 	this->shader = new GLSLProgram();
@@ -30,6 +33,9 @@ void PointLight::setUniforms(GLSLProgram *shader)
 	shader->setUniform("pointLight.ambient", ambient);
 	shader->setUniform("pointLight.diffuse", diffuse);
 	shader->setUniform("pointLight.specular", specular);
+	shader->setUniform("pointLight.constant", constant);
+	shader->setUniform("pointLight.linear", linear);
+	shader->setUniform("pointLight.quadratic", quadratic);
 }
 
 void PointLight::setUniforms(GLSLProgram *shader, glm::vec3 color)

@@ -10,6 +10,7 @@
 
 #include "Cube.h"
 #include "Camera.h"
+#include "Model.h"
 
 #include "PointLight.h"
 #include "DirectionLight.h"
@@ -25,7 +26,8 @@ class App
 	PointLight *light;
 	DirectionLight *dirLight;
 
-	std::vector<Cube*> cubes;
+	// std::vector<Cube*> cubes;
+	std::vector<Model*> models;
 
 	void initWindow();
 	void update();

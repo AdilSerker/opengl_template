@@ -47,7 +47,7 @@ public:
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
 
     // render the mesh
-    void Draw(GLSLProgram shader);
+    void Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
 
 private:
     /*  Render data  */
