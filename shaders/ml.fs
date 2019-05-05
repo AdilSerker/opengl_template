@@ -44,7 +44,7 @@ vec3 point_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     float distance    = length(LightPosition - Position);
@@ -63,7 +63,7 @@ vec3 dirLight_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     return 

@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "text2D.hpp"
 
 Camera::Camera()
 {
@@ -29,7 +30,7 @@ void Camera::update(GLFWwindow *window)
 		sin(verticalAngle),
 		cos(verticalAngle) * cos(horizontalAngle)
 	);
-	
+
 	// Right vector
 	glm::vec3 right = glm::vec3(
 		sin(horizontalAngle - 3.14f/2.0f), 

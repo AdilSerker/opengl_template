@@ -130,3 +130,12 @@ void cleanupText2D()
 	// Delete shader
 	glDeleteProgram(Text2DShaderID);
 }
+
+
+void printg(std::string info, int value, int y) {
+	char text[256];
+
+	sprintf(text, (info + " %i").c_str(), value);
+	printText2D(text, 10, y, 12);
+}
+

@@ -161,7 +161,7 @@ void App::run()
 
 		render();
 
-		printg("fps ", fps, 10);
+		printg("fps", fps, 10);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -173,11 +173,4 @@ void App::run()
 
 	cleanupText2D();
 	glfwTerminate();
-}
-
-void printg(string info, int value, int y) {
-	char text[256];
-
-	sprintf(text, (info + " %i").c_str(), value);
-	printText2D(text, 10, y, 12);
 }
