@@ -7,7 +7,7 @@ PointLight::PointLight() :
 	scale(glm::vec3(1.0f)),
 	color(glm::vec3(1.0f)),
 	ambient(glm::vec3(0.1f, 0.1f, 0.1f)),
-	diffuse(glm::vec3(0.5f, 0.5f, 0.5f)),
+	diffuse(glm::vec3(0.7f, 0.7f, 0.7f)),
 	specular(glm::vec3(1.0f, 1.0f, 1.0f)),
 	constant(1.0f),
 	linear(0.09f),

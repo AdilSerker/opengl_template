@@ -21,7 +21,7 @@
 #include <vector>
 using namespace std;
 
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
+unsigned int textureFromFile(const char *path, const string &directory, bool gamma = false);
 
 class Model 
 {
@@ -31,12 +31,22 @@ public:
     string directory;
     bool gammaCorrection;
 
-    Model(string const &path, bool gamma = false) : gammaCorrection(gamma)
+    glm::vec3 position;
+    glm::vec3 rotationAxis;
+    float rotationAngle;
+    glm::vec3 scale;
+
+    Model(string const &path, bool gamma = false) :
+            gammaCorrection(gamma),
+            position(glm::vec3(0.0, 0.0, 0.0)),
+            rotationAxis(glm::vec3(1.0, 1.0, 1.0)),
+            rotationAngle(0.0f),
+            scale(glm::vec3(1.0f))
     {
         loadModel(path);
     }
 
-    void Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
+    void draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj);
     
 private:
     void loadModel(string const &path);

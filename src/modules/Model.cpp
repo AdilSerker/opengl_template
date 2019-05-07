@@ -2,10 +2,15 @@
 
 #include <iostream>
 // draws the model, and thus all its meshes
-void Model::Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
+void Model::draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
 {
+    glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, position);
+	model = glm::rotate(model, rotationAngle, rotationAxis);
+	model = glm::scale(model, scale);
+
     for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader, view, proj);
+        meshes[i].draw(shader, model, view, proj);
 }
 
 void Model::loadModel(string const &path)
@@ -21,7 +26,6 @@ void Model::loadModel(string const &path)
     }
     // retrieve the directory path of the filepath
     directory = path.substr(0, path.find_last_of('/'));
-
     // process ASSIMP's root node recursively
     processNode(scene->mRootNode, scene);
 }
@@ -29,6 +33,7 @@ void Model::loadModel(string const &path)
 // processes a node in a recursive fashion. Processes each individual mesh located at the node and repeats this process on its children nodes (if any).
 void Model::processNode(aiNode *node, const aiScene *scene)
 {
+
     // process each mesh located at the current node
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
@@ -37,6 +42,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         meshes.push_back(processMesh(mesh, scene));
     }
+
     // after we've processed all of the meshes (if any) we then recursively process each of the children nodes
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
@@ -46,6 +52,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 {
+
     // data to fill
     vector<Vertex> vertices;
     vector<unsigned int> indices;
@@ -54,9 +61,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     // Walk through each of the mesh's vertices
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
+
         Vertex vertex;
         glm::vec3 vector; // we declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
         // positions
+
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
@@ -67,8 +76,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vector.z = mesh->mNormals[i].z;
         vertex.Normal = vector;
         // texture coordinates
+        
         if (mesh->mTextureCoords[0]) // does the mesh contain texture coordinates?
         {
+    
             glm::vec2 vec;
             // a vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't
             // use models where a vertex can have multiple texture coordinates so we always take the first set (0).
@@ -139,7 +150,6 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
         {
             if (std::strcmp(textures_loaded[j].path.data(), str.C_Str()) == 0)
             {
-                
                 textures.push_back(textures_loaded[j]);
                 skip = true; // a texture with the same filepath has already been loaded, continue to next one. (optimization)
                 break;
@@ -149,7 +159,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
         { // if texture hasn't been loaded already, load it
             Texture texture;
 
-            texture.id = TextureFromFile(str.C_Str(), this->directory);
+            texture.id = textureFromFile(str.C_Str(), this->directory);
             texture.type = typeName;
             texture.path = str.C_Str();
             textures.push_back(texture);
@@ -159,7 +169,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
     return textures;
 }
 
-unsigned int TextureFromFile(const char *path, const string &directory, bool gamma)
+unsigned int textureFromFile(const char *path, const string &directory, bool gamma)
 {
     string filename = string(path);
     filename = directory + '/' + filename;
@@ -182,6 +192,7 @@ unsigned int TextureFromFile(const char *path, const string &directory, bool gam
         glGenerateMipmap(GL_TEXTURE_2D);
 
         SOIL_free_image_data(data);
+        glBindTexture(GL_TEXTURE_2D, 0); 
     }
     else
     {

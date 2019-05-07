@@ -284,10 +284,12 @@ void GLSLProgram::setUniform(const char *name, GLuint val) {
     glUniform1ui(loc, val);
 }
 
+
 void GLSLProgram::setUniform(const char *name, bool val) {
     int loc = getUniformLocation(name);
     glUniform1i(loc, val);
 }
+
 
 void GLSLProgram::printActiveUniforms() {
     GLint nUniforms, size, location, maxLen;

@@ -1,4 +1,4 @@
-#version 330 core
+#version 410 core
 
 in vec3 Normal;
 in vec3 Position;
@@ -7,13 +7,6 @@ in vec3 LightPosition;
 in vec3 LightDirection;
 
 out vec4 color;
-
-struct Material {
-    sampler2D diffuse;
-    sampler2D specular;
-    float shininess;
-};
-uniform Material material;
 
 uniform sampler2D texture_diffuse1;
 uniform sampler2D texture_specular1;
@@ -44,7 +37,7 @@ vec3 point_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     float distance    = length(LightPosition - Position);
@@ -63,7 +56,7 @@ vec3 dirLight_ads() {
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
     float diff = max(dot(norm, lightDir), 0.0);
 
     return 
@@ -77,5 +70,5 @@ void main(){
 
     res = point_ads() + dirLight_ads();
 
-    color=vec4(res, 1.0);
+    color= vec4(res, 1.0);
 }

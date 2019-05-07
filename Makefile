@@ -39,6 +39,9 @@ app: src/core/App.cpp
 model: src/modules/Model.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
+mesh: src/modules/Mesh.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
+
 camera: src/modules/Camera.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 

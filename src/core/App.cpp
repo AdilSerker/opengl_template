@@ -14,14 +14,21 @@ void App::update()
 {
 	camera->update(window);
 
-	light->position.x = 5 * sin(glfwGetTime());
+	light->position.x = -5 * sin(glfwGetTime());
 	light->position.z = 5 * cos(glfwGetTime());
+
+	// light->position = camera->getPosition();
+
+	models[0]->rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+	models[0]->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
 
 }
 
 void App::render()
 {
-	light->draw(camera->getViewMatrix(), camera->getProjectionMatrix());
+	glm::mat4 view = camera->getViewMatrix();
+	glm::mat4 proj = camera->getProjectionMatrix();
+	light->draw(view, proj);
 
 	shader->use();
 	camera->setUniforms(this->shader);
@@ -29,10 +36,10 @@ void App::render()
 	light->setUniforms(this->shader);
 	dirLight->setUniforms(this->shader);
 
-	auto it1 = models.begin();
-	for (auto stop = models.end(); it1 != stop; ++it1)
+	auto it = models.begin();
+	for (auto stop = models.end(); it != stop; ++it)
 	{
-		(*it1)->Draw(shader, camera->getViewMatrix(), camera->getProjectionMatrix());
+		(*it)->draw(this->shader, view, proj);
 	}
 
 	printg("cam_pos.x", (int)camera->getPosition().x, 40);
@@ -63,12 +70,13 @@ void App::init()
 
 	this->light = new PointLight();
 	this->light->scale = glm::vec3(0.05f);
-	this->light->position = glm::vec3(10.0f, 10.5f, 10.0f);
+	this->light->position = glm::vec3(10.0f, 10.0f, 10.0f);
 
 	this->dirLight = new DirectionLight();
 
-	models.push_back(new Model("./models/nanosuit/nanosuit.obj"));
+	Model *nanosuit = new Model("./models/nanosuit/nanosuit.obj");
 
+	models.push_back(nanosuit);
 }
 
 void App::initWindow()

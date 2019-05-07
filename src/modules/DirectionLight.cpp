@@ -2,8 +2,8 @@
 
 DirectionLight::DirectionLight() :
     direction(glm::vec3(-1.0f, -1.0f, -1.0f)),
-    ambient(glm::vec3(0.2f, 0.2f, 0.2f)),
-	diffuse(glm::vec3(0.8f, 0.8f, 0.8f)),
+    ambient(glm::vec3(0.1f, 0.1f, 0.1f)),
+	diffuse(glm::vec3(0.6f, 0.6f, 0.6f)),
 	specular(glm::vec3(1.0f, 1.0f, 1.0f))
 {}
 

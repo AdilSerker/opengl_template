@@ -13,16 +13,28 @@ Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture
 }
 
 // render the mesh
-void Mesh::Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
+void Mesh::draw(GLSLProgram *shader, glm::mat4 model, glm::mat4 view, glm::mat4 proj)
 {
+    shader->use();
+
+	glBindVertexArray(VAO);
+
+    shader->setUniform("ViewMatrix", view);
+
+	shader->setUniform("ProjMatrix", proj);
+
+	shader->setUniform("ModelMatrix", model);
+
+	glm::mat4 modelView = view * model;
+	shader->setUniform("NormalMatrix", glm::mat3(glm::vec3(modelView[0]), glm::vec3(modelView[1]), glm::vec3(modelView[2])));
+
     // bind appropriate textures
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
     unsigned int normalNr = 1;
     unsigned int heightNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++)
+    for (int i = 0; i < textures.size(); i++)
     {
-        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         string number;
         string name = textures[i].type;
@@ -35,23 +47,14 @@ void Mesh::Draw(GLSLProgram *shader, glm::mat4 view, glm::mat4 proj)
         else if (name == "texture_height")
             number = std::to_string(heightNr++); // transfer unsigned int to stream
         // now set the sampler to the correct texture unit
+
         shader->setUniform((name + number).c_str(), i);
         // and finally bind the texture
+        glActiveTexture(GL_TEXTURE0 + i); // active proper texture unit before binding
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
+
     }
 
-    shader->setUniform("ViewMatrix", view);
-
-	shader->setUniform("ProjMatrix", proj);
-
-    glm::mat4 model = glm::mat4(1.0f);
-	shader->setUniform("ModelMatrix", model);
-
-	glm::mat4 modelView = view * model;
-	shader->setUniform("NormalMatrix", glm::mat3(glm::vec3(modelView[0]), glm::vec3(modelView[1]), glm::vec3(modelView[2])));
-
-    // draw mesh
-    glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
