@@ -75,6 +75,7 @@ void App::init()
 	this->dirLight = new DirectionLight();
 
 	Model *nanosuit = new Model("./models/nanosuit/nanosuit.obj");
+	// nanosuit->scale = glm::vec3(0.006f);
 
 	models.push_back(nanosuit);
 }
