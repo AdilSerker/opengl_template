@@ -71,7 +71,7 @@ void Camera::update(GLFWwindow *window)
     {
         pos -= up * cameraSpeed;
     }
-    ProjectionMatrix = glm::perspective(45.0f, (GLfloat)WINDOW_WIDTH/WINDOW_HEIGHT, 0.1f, 100.0f);
+    ProjectionMatrix = glm::perspective(45.0f, (GLfloat)WINDOW_WIDTH/WINDOW_HEIGHT, 0.1f, 1000.0f);
 
     ViewMatrix = glm::lookAt(
         pos,

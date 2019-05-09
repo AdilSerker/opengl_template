@@ -7,6 +7,7 @@ using std::ios;
 using std::string;
 
 #include <sstream>
+#include <iostream>
 #include <sys/stat.h>
 
 namespace GLSLShaderInfo {
@@ -192,6 +193,7 @@ void GLSLProgram::link() {
     } else {
         findUniformLocations();
         linked = true;
+        std::cout << "Program link complite" << std::endl;
     }
 }
 

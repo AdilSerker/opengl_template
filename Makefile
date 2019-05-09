@@ -42,6 +42,9 @@ model: src/modules/Model.cpp
 mesh: src/modules/Mesh.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 
+cubemap: src/modules/CubeMap.cpp
+	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
+
 camera: src/modules/Camera.cpp
 	$(CC) $(FLAGS) $(INC) $< -c && make move && make link
 

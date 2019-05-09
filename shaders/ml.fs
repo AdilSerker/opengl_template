@@ -32,7 +32,9 @@ struct DirLight {
 uniform DirLight dirLight;
 
 vec3 point_ads() {
+    // vec4 normal = 2.0 * texture( texture_normal1, TexCoords ) - 1.0;
     vec3 norm = normalize(Normal);
+
     vec3 lightDir = normalize(LightPosition - Position);
     vec3 viewDir = normalize(-Position);
     vec3 reflectDir = reflect(-lightDir, norm);
@@ -47,7 +49,7 @@ vec3 point_ads() {
     return 
         pointLight.ambient * texture(texture_diffuse1, TexCoords).rgb * attenuation +
         pointLight.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb * attenuation +
-        dirLight.specular * spec * texture(texture_specular1, TexCoords).rgb;
+        pointLight.specular * spec * texture(texture_specular1, TexCoords).rgb;
 }
 
 vec3 dirLight_ads() {
@@ -64,6 +66,7 @@ vec3 dirLight_ads() {
         dirLight.diffuse * diff * texture(texture_diffuse1, TexCoords).rgb +
         dirLight.specular * spec * texture(texture_specular1, TexCoords).rgb;
 }
+
 
 void main(){
     vec3 res;

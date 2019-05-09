@@ -71,7 +71,8 @@ vec3 dirLight_ads() {
 void main(){
     vec3 res;
 
-    res = point_ads() + dirLight_ads();
+    res += point_ads();
+    res += dirLight_ads();
 
     color=vec4(res, 1.0);
 }

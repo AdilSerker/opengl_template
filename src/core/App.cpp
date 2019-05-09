@@ -22,6 +22,8 @@ void App::update()
 	models[0]->rotationAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 	models[0]->rotationAngle = (GLfloat)glfwGetTime() * 0.4f;
 
+	this->cubemap->position = camera->getPosition(); 
+
 }
 
 void App::render()
@@ -41,7 +43,7 @@ void App::render()
 	{
 		(*it)->draw(this->shader, view, proj);
 	}
-
+	cubemap->draw(view, proj);
 	printg("cam_pos.x", (int)camera->getPosition().x, 40);
 	printg("cam_pos.y", (int)camera->getPosition().y, 60);
 	printg("cam_pos.z", (int)camera->getPosition().z, 80);
@@ -71,6 +73,9 @@ void App::init()
 	this->light = new PointLight();
 	this->light->scale = glm::vec3(0.05f);
 	this->light->position = glm::vec3(10.0f, 10.0f, 10.0f);
+
+	this->cubemap = new CubeMap();
+	this->cubemap->scale = glm::vec3(499.0f);
 
 	this->dirLight = new DirectionLight();
 

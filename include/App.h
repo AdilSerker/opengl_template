@@ -15,6 +15,8 @@
 #include "PointLight.h"
 #include "DirectionLight.h"
 
+#include "CubeMap.h"
+
 class App
 {
 	GLFWwindow *window;
@@ -26,7 +28,7 @@ class App
 	PointLight *light;
 	DirectionLight *dirLight;
 
-	// std::vector<Cube*> cubes;
+	CubeMap *cubemap;
 	std::vector<Model*> models;
 
 	void initWindow();

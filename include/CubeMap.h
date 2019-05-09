@@ -1,5 +1,5 @@
-#ifndef POINT_LIGHT_H
-#define POINT_LIGHT_H
+#ifndef CUBE_MAP_H
+#define CUBE_MAP_H
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -10,33 +10,29 @@
 
 #include "GLSLProgram.h"
 
-class PointLight
+class CubeMap
 {
   private:
     GLuint vao, vbo;
-
-    void initBuffers();
+    GLuint cubeMapTex;
 
     GLSLProgram *shader;
 
+    void initBuffers();
+    void initTexture();
+
+    void genTex(std::vector<std::string> faces);
+
   public:
-    PointLight();
-    ~PointLight();
+    CubeMap();
+    ~CubeMap();
 
     glm::vec3 position;
     glm::vec3 rotationAxis;
     float rotationAngle;
     glm::vec3 scale;
 
-    glm::vec3 color;
-
-    float constant;
-    float linear;
-    float quadratic;
-
     void draw(glm::mat4 view, glm::mat4 proj);
-    void setUniforms(GLSLProgram *shader);
-    void setUniforms(GLSLProgram *shader, glm::vec3 color);
 };
 
 #endif

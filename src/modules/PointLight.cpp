@@ -6,12 +6,9 @@ PointLight::PointLight() :
 	rotationAngle(0.0f),
 	scale(glm::vec3(1.0f)),
 	color(glm::vec3(1.0f)),
-	ambient(glm::vec3(0.1f, 0.1f, 0.1f)),
-	diffuse(glm::vec3(0.7f, 0.7f, 0.7f)),
-	specular(glm::vec3(1.0f, 1.0f, 1.0f)),
 	constant(1.0f),
-	linear(0.09f),
-	quadratic(0.032f)
+	linear(0.022f),
+	quadratic(0.0019f)
 {
 
 	this->shader = new GLSLProgram();
@@ -30,9 +27,9 @@ PointLight::PointLight() :
 void PointLight::setUniforms(GLSLProgram *shader)
 {
 	shader->setUniform("pointLight.position", position);
-	shader->setUniform("pointLight.ambient", ambient);
-	shader->setUniform("pointLight.diffuse", diffuse);
-	shader->setUniform("pointLight.specular", specular);
+	shader->setUniform("pointLight.ambient", color * 0.1f);
+	shader->setUniform("pointLight.diffuse", color * 0.6f);
+	shader->setUniform("pointLight.specular", color * 0.9f);
 	shader->setUniform("pointLight.constant", constant);
 	shader->setUniform("pointLight.linear", linear);
 	shader->setUniform("pointLight.quadratic", quadratic);
